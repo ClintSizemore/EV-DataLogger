@@ -1,3 +1,8 @@
+"""
+Project: EV-DataLogger
+Author: Walker Poyner
+"""
+
 import tkinter as tk
 from tkinter import ttk
 import math
@@ -129,5 +134,5 @@ gauge1.autoUpdate()
 #gauge2.drawNeedle(44)
 
 root.after(80000, lambda: root.destroy())
-
-tk.mainloop()
+if __name__ == "main":
+    tk.mainloop()

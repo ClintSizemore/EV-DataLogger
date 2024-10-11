@@ -95,7 +95,7 @@ def get_mph():
 
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
-root.minsize(root.winfo_screenwidth(),root.winfo_screenheight())
+#root.minsize(root.winfo_screenwidth(),root.winfo_screenheight())
 s= ttk.Style()
 s.configure("TFrame",background="black")
 main_frame = ttk.Frame(root, padding="4 4 10 10")
@@ -120,7 +120,7 @@ gauge1.grid(column=0, row=2)
 gauge1.drawNeedle(0)
 gauge1._value_reporter_method = get_mph
 gauge1.autoUpdate()
-
+tk.mainloop()
 
 #gauge1.after(300,gauge1.drawNeedle_animate)
 #gauge1.after(9000,gauge1.drawNeedle_animate())
@@ -136,5 +136,3 @@ gauge1.autoUpdate()
 #gauge2.drawNeedle(44)
 
 root.after(80000, lambda: root.destroy())
-if __name__ == "main":
-    tk.mainloop()

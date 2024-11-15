@@ -1,6 +1,6 @@
 """
 Project: EV-DataLogger
-Author: Walker Poyner
+Author: Walker Poyner, Alex Burns
 """
 
 import tkinter as tk
@@ -9,7 +9,20 @@ import math
 import sys
 root = tk.Tk()
 
-""""this is a test"""
+"""
+What needs to be put on the screen:
+ - MPH
+    - keep this simple, just mph
+ - Current Battery percentage
+    - not just basic progressbar, include markers and labels
+    - change color depending on deviation from norm?
+    - decide if progressbar should be vertical or horizontal
+ - Recharge potential (get clairification from Taylor)
+    - just figure out what this is even supposed to be
+    - how much breaking for X seconds could recharge?
+ - Rear tire temps
+    - vertical progress bars (if we have nothing else to do we could make them tire shaped)
+"""
 
 class Gauge (tk.Canvas):
     _current_value = 0
@@ -36,6 +49,7 @@ class Gauge (tk.Canvas):
         #self.setValue(0)
         #self.drawNeedle()
 
+        # not needed
         self._arc_ref = self.create_arc(
             self._dial_origin_coords[0]-self._needle_length,
             self._dial_origin_coords[1]-self._needle_length,
@@ -48,6 +62,7 @@ class Gauge (tk.Canvas):
             extent = 180,
             )
 
+    # not needed
     def drawNeedle(self,value):
         self._current_value = value
         self._angle = math.pi - ((math.pi/self._bounds[1]) * self._current_value)
@@ -60,23 +75,14 @@ class Gauge (tk.Canvas):
             self._target_coords[1],
             width = self._needle_width, 
             fill = self._needle_color)
-    """
-    def after(self, ms: int, value) -> str:
-        #needs revision (rewrite so needle ends up at commanded once ms time is reached)
-        #deprecated do not use
-        if not (self._dialmovement_start):
-            super().after(ms, self.after, ms, value)
-            self._dialmovement_start = True
-            return
-        self._commanded_value = value
-        self.drawNeedle_animate()
-    """
 
+    # TODO: make widely applicable for all data
     def autoUpdate(self):
         self._commanded_value = self._value_reporter_method()
         self.drawNeedle_animate()
         self.after(100, self.autoUpdate)
 
+    # not needed
     def drawNeedle_animate(self):
         if self._current_value == self._commanded_value:
             self._dialmovement_start = False
@@ -84,55 +90,60 @@ class Gauge (tk.Canvas):
         self.drawNeedle(self._current_value + (1 if self._commanded_value > self._current_value else (-1)))
         self._animation_speed = 12//(((self._commanded_value+1)//(self._current_value+1)) if (self._commanded_value > self._current_value) else ((self._current_value +1)//(self._commanded_value+1)))
         super().after(self._animation_speed, self.drawNeedle_animate)
-     
+
+# will have to restructure to not have gauge     
 def update_mph(gauge, label, mph):
     gauge.after(0,)
 
+# will need major reworks when we can connect to the SEVCON
 def get_mph():
     mph = int(input("Enter mph: "))
     mph_variable.set(mph)
     return mph
 
+# THIS IS ALL FORMATING FOR TKINTER NOT CUSTOM TKINTER
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
-#root.minsize(root.winfo_screenwidth(),root.winfo_screenheight())
+root.minsize(root.winfo_screenwidth(),root.winfo_screenheight())
 s= ttk.Style()
 s.configure("TFrame",background="black")
 main_frame = ttk.Frame(root, padding="4 4 10 10")
 main_frame.grid(row=0,column=0)
 main_frame.configure()
 
+# MPH variable
 mph_variable = tk.IntVar(root)
-label1 = ttk.Label(main_frame, text="54 MPH", textvariable=mph_variable)
+
+label1 = ttk.Label(main_frame, text="54 MPH", textvariable=mph_variable) # why 54????
 label1.configure(font=("Helvetica",72,),foreground='red',background='black', padding="8 0 8 8")
 label1.grid(row=1, column=1,)
+
+# why is this hardcoded
 label2 = ttk.Label(main_frame, text = "(x,y)")
 label2.configure(font=("Helvetica",72,),foreground='red',background='black', padding="8 4 8 4")
 label2.grid(row=3, column=1)
 label2 = ttk.Label(main_frame, text = "140 V")
 label2.configure(font=("Helvetica",72,),foreground='red',background='black', padding="0 0 0 0")
-
 label2.grid(row=2, column=1)
+
+# create gauge
+# not needed
 gauge1 = Gauge(main_frame, needle_length=200, background="black",value_range =[0,100])
 gauge1.grid(column=0, row=2)
 
+# create battery progressbar
+# absolutely not.
+progressbar = ttk.Progressbar(orient=tk.VERTICAL)
+progressbar.place(x=30, y=30, height=160)
 
+# update needle values
+# yes but dude no gauge
 gauge1.drawNeedle(0)
 gauge1._value_reporter_method = get_mph
-gauge1.autoUpdate()
+
+# Update all info
+gauge1.autoUpdate() # TODO: make autoUpdate global and applicable for all data
+
+# loop and destroy window if there are 80 seconds without updates
 tk.mainloop()
-
-#gauge1.after(300,gauge1.drawNeedle_animate)
-#gauge1.after(9000,gauge1.drawNeedle_animate())
-#gauge1.drawNeedle_animate()
-#gauge1._commanded_value = 30
-#gauge1.drawNeedle_animate()
-#gauge1.after(400,90)
-
-
-#gauge2 = Gauge(main_frame, needle_length=200, background="black",value_range =[0,100])
-#gauge2.grid(column=2, row=2)
-
-#gauge2.drawNeedle(44)
-
-root.after(80000, lambda: root.destroy())
+root.after(80000, lambda: root.destroy()) # why

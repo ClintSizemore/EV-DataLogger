@@ -23,7 +23,8 @@ battery_val = int((input("battery val: "))) / 100  # takes percentage
 # battery_label = ctk.CTkLabel(battery_box, text="Battery\n", font=("Arial", 16))
 # battery_label.pack(expand=True, fill="both")
 
-#Clints lovely and wonderful comment
+#Clints lovely and wonderfulcomments
+#more comments because I love github
 
 # battery progress
 progress_bar_1 = ctk.CTkProgressBar(app)

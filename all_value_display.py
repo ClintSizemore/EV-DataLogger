@@ -25,6 +25,7 @@ battery_val = int((input("battery val: "))) / 100  # takes percentage
 
 #Clints lovely and wonderfulcomments
 #more comments because I love github
+# AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 
 # battery progress
 progress_bar_1 = ctk.CTkProgressBar(app)
